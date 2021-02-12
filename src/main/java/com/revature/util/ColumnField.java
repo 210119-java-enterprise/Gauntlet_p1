@@ -24,5 +24,9 @@ public class ColumnField {
         return field.getType();
     }
 
+    public String getColumnName() {
+        return field.getAnnotation(Column.class).name();
+    }
+
 }
 
