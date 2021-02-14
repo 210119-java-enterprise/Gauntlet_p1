@@ -1,10 +1,7 @@
 package com.revature.util;
 
 import java.io.FileReader;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 public class Configuration {
 
@@ -38,8 +35,17 @@ public class Configuration {
         return this;
     }
 
+    public Configuration addPackage (String path) {
+        // TODO
+        return this;
+    }
+
     public List<MetaModel<Class<?>>> getMetaModels() {
         return (metaModels == null) ? Collections.emptyList() : metaModels;
+    }
+
+    public SessionFactory buildSessionFactory () {
+        return new SessionFactory(metaModels);
     }
 
 }

@@ -3,19 +3,16 @@ package com.revature.util;
 import com.revature.repos.DMLRepo;
 import com.revature.services.DMLService;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class SessionFactory {
-
-    private static SessionFactory sessFactory = new SessionFactory();
 
     private List<MetaModel<Class<?>>> modelList;
 
     private DMLService dmlService;
 
-    public SessionFactory() {
-        modelList = new LinkedList<>();
+    public SessionFactory(List<MetaModel<Class<?>>> modelList) {
+        this.modelList = modelList;
 
         final DMLRepo dmlRepo = new DMLRepo();
 
@@ -32,6 +29,7 @@ public class SessionFactory {
     public Session openSession () {
         Session session = new Session(modelList, dmlService, ConnectionFactory.getInstance().getConnection());
         return session;
+
     }
 
     public void delete (Object deleteObj) {
