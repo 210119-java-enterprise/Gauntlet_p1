@@ -11,17 +11,22 @@ public class DMLService {
         this.dmlRepo = dmlRepo;
     }
 
-    public void insert(MetaModel<?> model, Object obj) {
+    public boolean insert(MetaModel<?> model, Object newObj) {
 
-        if (obj == null) {
+        if (newObj == null) {
             // throw error...
         }
-        dmlRepo.insert(model, obj);
+        return dmlRepo.insert(model, newObj);
 
     }
 
-    public void delete() {
-        // TODO
+    public void delete(Object deleteObj) {
+
+        if (deleteObj == null) {
+            // throw error...
+        }
+
+        dmlRepo.delete(deleteObj);
     }
 
     public void update() {

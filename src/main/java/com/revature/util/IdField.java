@@ -23,8 +23,4 @@ public class IdField {
     public Class<?> getType() {
         return field.getType();
     }
-
-    public String getColumnName() {
-        return field.getAnnotation(Id.class).name();
-    }
 }

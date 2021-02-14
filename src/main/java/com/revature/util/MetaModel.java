@@ -61,4 +61,21 @@ public class MetaModel<T> {
 
         return columns;
     }
+
+    public List<ColumnField> getColumnsMinusId() {
+        Field[] fields = clazz.getDeclaredFields();
+        for (Field field : fields) {
+            Column column = field.getAnnotation(Column.class);
+            Id id = field.getAnnotation(Id.class);
+            if ((id == null) && (column != null)) {
+                columns.add(new ColumnField(field));
+            }
+        }
+
+        if (columns.isEmpty()) {
+            throw new RuntimeException("No columns found in: " + clazz.getName());
+        }
+
+        return columns;
+    }
 }

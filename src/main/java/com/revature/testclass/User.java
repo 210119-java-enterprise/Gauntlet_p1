@@ -11,7 +11,8 @@ import java.util.Objects;
 @Table(name = "app_users")
 public class User {
 
-    @Id(name = "user_id")
+    @Id
+    @Column(name = "user_id")
     private int id;
 
     @Column(name = "username")

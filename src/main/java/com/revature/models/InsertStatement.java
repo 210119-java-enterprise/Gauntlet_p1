@@ -17,7 +17,7 @@ public class InsertStatement {
 
     private void scrape(MetaModel<?> model, Object newObj) {
         String table = newObj.getClass().getAnnotation(Table.class).name();
-        List<String> columns = model.getColumns()
+        List<String> columns = model.getColumnsMinusId()
                                     .stream()
                                     .map(ColumnField::getColumnName)
                                     .collect(Collectors.toList());
