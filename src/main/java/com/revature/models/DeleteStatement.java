@@ -3,11 +3,8 @@ package com.revature.models;
 import com.revature.annotations.Column;
 import com.revature.annotations.Id;
 import com.revature.annotations.Table;
-import com.revature.util.ColumnField;
-import com.revature.util.MetaModel;
 
 import java.lang.reflect.Field;
-import java.util.List;
 
 public class DeleteStatement {
 
@@ -33,7 +30,7 @@ public class DeleteStatement {
 
     }
 
-    public void buildStatement (String table, String idColName) {
+    private void buildStatement (String table, String idColName) {
         statement += "DELETE FROM " + table +
                     " WHERE " + idColName + " = ?";
     }

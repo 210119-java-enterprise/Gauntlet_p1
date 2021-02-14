@@ -43,11 +43,27 @@ public class Session {
     */
 
 
-    public boolean delete() {
-        return false;
+    public boolean delete (Object deleteObj) {
+        return dmlService.delete(deleteObj);
+
     }
 
-    public boolean update() {
-        return false;
+    public boolean update(Object updateObj, Object oldObj) {
+
+        if(!updateObj.getClass().equals(oldObj.getClass())) {
+            // throw exception...
+        }
+        MetaModel<?> correctModel = null;
+
+        for (MetaModel<?> model : modelList) {
+            if (updateObj.getClass().getName().equals(model.getClassName())) {
+                correctModel = model;
+            }
+        }
+
+        if (correctModel == null) {
+            // throw exception...
+        }
+        return dmlService.update(correctModel, updateObj, oldObj);
     }
 }

@@ -31,8 +31,4 @@ public class SessionFactory {
         return session;
 
     }
-
-    public void delete (Object deleteObj) {
-        dmlService.delete(deleteObj);
-    }
 }

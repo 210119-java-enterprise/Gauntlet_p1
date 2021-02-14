@@ -8,7 +8,10 @@ import com.revature.util.SessionFactory;
 public class GauntletDriver {
 
     public static void main(String[] args) {
-        User user = new User("alex_googe57","password", "Alex","Googe");
+        User user = new User("alex_googe1337","password", "Alex","Googe");
+        User user1 = new User("alex_googe_updated", "password_updated", "Alex", "Googe");
+
+        //User user1 = new User(1);
         SessionFactory factory = new Configuration()
                                 .addAnnotatedClass(User.class)
                                 .buildSessionFactory();
@@ -16,7 +19,8 @@ public class GauntletDriver {
         Session session = factory.openSession();
         session.save(user);
 
-        System.out.println("User was inserted...");
+        if(session.update(user1, user))
+            System.out.println("success!");
 
     }
 

@@ -27,11 +27,20 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
 
+    public User(int id) {
+        this.id = id;
+    }
+
     public User(String username, String password, String firstName, String lastName) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public User(int id, String username, String password, String firstName, String lastName) {
+        this(username, password, firstName, lastName);
+        this.id = id;
     }
 
     public int getId() {

@@ -20,17 +20,22 @@ public class DMLService {
 
     }
 
-    public void delete(Object deleteObj) {
+    public boolean delete(Object deleteObj) {
 
         if (deleteObj == null) {
             // throw error...
         }
 
-        dmlRepo.delete(deleteObj);
+        return dmlRepo.delete(deleteObj);
     }
 
-    public void update() {
-        // TODO
+    public boolean update(MetaModel<?> model, Object updateObj, Object oldObj) {
+
+        if (updateObj == null && oldObj == null) {
+            // throw exception
+        }
+
+        return dmlRepo.update(model, updateObj, oldObj);
     }
 
 }
