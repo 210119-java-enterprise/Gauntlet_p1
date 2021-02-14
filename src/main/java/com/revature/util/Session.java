@@ -37,10 +37,12 @@ public class Session {
     }
 
     /*
-    public Object get() {
-      TODO
+    public Object get (Class<?> clazz, int id) {
+
     }
     */
+
+
     public boolean delete() {
         return false;
     }
