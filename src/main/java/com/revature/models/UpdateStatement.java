@@ -30,6 +30,11 @@ public class UpdateStatement {
         scrape(model, updateObj);
     }
 
+    /**
+     * Scrapes the MetaModel and Object for the table name and columns needed for update
+     * @param model the MetaModel that corresponds to the updateObj
+     * @param updateObj the Object that will provide the new values to update for the database
+     */
     public void scrape (MetaModel<?> model, Object updateObj) {
         String table = updateObj.getClass().getAnnotation(Table.class).name();
         List<String> columns = new ArrayList<>();
@@ -47,7 +52,12 @@ public class UpdateStatement {
         buildStatement(table, columns);
     }
 
-    // Trying with StringBuilder...
+
+    /**
+     * Builds the String representation of the JDBC query
+     * @param table the name of the table that will be updated
+     * @param columns a List of column names that will be updated
+     */
     private void buildStatement (String table, List<String> columns) {
         StringBuilder updateString = new StringBuilder("SET ");
         StringBuilder whereString = new StringBuilder("WHERE ");
