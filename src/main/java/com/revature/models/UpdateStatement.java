@@ -9,10 +9,23 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A model class that corresponds to any JDBC update statement
+ *
+ * @author Alex Googe (github: darkspearrai)
+ */
 public class UpdateStatement {
 
+    /**
+     * The String representation of the JDBC update query to be executed
+     */
     private String statement = "";
 
+    /**
+     * Constructor for UpdateStatement that scrapes and builds the statement from a MetaModel and Object
+     * @param model the MetaModel that corresponds to the updateObj
+     * @param updateObj the Object that will provide the new values for the record in the database
+     */
     public UpdateStatement (MetaModel<?> model, Object updateObj) {
         scrape(model, updateObj);
     }

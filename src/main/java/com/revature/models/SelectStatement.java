@@ -3,15 +3,27 @@ package com.revature.models;
 import com.revature.annotations.Table;
 import com.revature.util.MetaModel;
 
+/**
+ * A model class that corresponds to any JDBC select statement
+ *
+ * @author Alex Googe (github: darkspearrai)
+ */
 public class SelectStatement {
 
-    private String statement = "";
+    /**
+     * The String representation of the JDBC select query to be executed
+     */
+    private String statement;
 
+    /**
+     * Constructor for SelectStatement that creates the select statement
+     * @param model the MetaModel that corresponds to the Object the user would like to grab from the database
+     */
     public SelectStatement (MetaModel<?> model) {
 
-        //String table = model.getClass().getAnnotation(Table.class).name();
+        statement = "";
 
-        String table = "app_users";
+        String table = model.getModeledClass().getAnnotation(Table.class).name();
 
         statement = "SELECT * FROM " + table;
 
