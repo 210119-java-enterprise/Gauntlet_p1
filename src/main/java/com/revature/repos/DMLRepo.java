@@ -183,7 +183,7 @@ public class DMLRepo {
      * @param model the MetaModel to pull all of the corresponding records for
      * @return a List of the Objects from the database that correspond to the given MetaModel
      */
-    public List<?> selectAll(MetaModel<?> model) {
+    public List<?> selectAll (MetaModel<?> model) {
 
         List<Object> objList = new ArrayList<>();
         SelectStatement statement = new SelectStatement(model);
