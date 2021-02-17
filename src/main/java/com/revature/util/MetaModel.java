@@ -78,4 +78,8 @@ public class MetaModel<T> {
 
         return columns;
     }
+
+    public Class<?> getModeledClass() {
+        return clazz;
+    }
 }

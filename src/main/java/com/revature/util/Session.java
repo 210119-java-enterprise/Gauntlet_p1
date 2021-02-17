@@ -66,4 +66,16 @@ public class Session {
         }
         return dmlService.update(correctModel, updateObj, oldObj);
     }
+
+    public List<?> getAll(Class<?> clazz) {
+
+        MetaModel<?> correctModel = null;
+
+        for (MetaModel<?> model : modelList) {
+            if (clazz.getName().equals(model.getClassName()))
+                correctModel = model;
+        }
+
+        return dmlService.getAll(correctModel);
+    }
 }

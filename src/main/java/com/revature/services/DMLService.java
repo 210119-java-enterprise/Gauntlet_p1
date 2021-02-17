@@ -3,6 +3,8 @@ package com.revature.services;
 import com.revature.repos.DMLRepo;
 import com.revature.util.MetaModel;
 
+import java.util.List;
+
 public class DMLService {
 
     public DMLRepo dmlRepo;
@@ -36,6 +38,10 @@ public class DMLService {
         }
 
         return dmlRepo.update(model, updateObj, oldObj);
+    }
+
+    public List<?> getAll(MetaModel<?> model) {
+        return dmlRepo.selectAll(model);
     }
 
 }
