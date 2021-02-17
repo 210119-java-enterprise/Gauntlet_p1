@@ -22,7 +22,9 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * The Repository class for handling any JDBC Data Manipulation Language Queries
  *
+ * @author Alex Googe (github: darkspearrai)
  */
 public class DMLRepo {
 
