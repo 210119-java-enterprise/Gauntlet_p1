@@ -1,6 +1,5 @@
 package com.revature.repos;
 
-
 import com.revature.annotations.Column;
 import com.revature.annotations.Id;
 import com.revature.models.DeleteStatement;
@@ -21,10 +20,18 @@ import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
+/**
+ *
+ */
 public class DMLRepo {
 
+    /**
+     * Inserts the Object into the database
+     * @param model the MetaModel that corresponds to the Object that is being inserted into the database
+     * @param obj the Object that contains the values that should be inserted into the database
+     * @return a boolean that is true if the insert happened and false if it didn't
+     */
     public boolean insert(MetaModel<?> model, Object obj) {
 
         InsertStatement statement = new InsertStatement(model, obj);
@@ -65,6 +72,11 @@ public class DMLRepo {
         return isSuccessful;
     }
 
+    /**
+     * Deletes a record from the database that corresponds to the values in the Object
+     * @param deleteObj the Object that should be deleted from the database
+     * @return a boolean that is true if the Object was deleted or false if it is not
+     */
     public boolean delete (Object deleteObj) {
         DeleteStatement statement = new DeleteStatement(deleteObj);
         System.out.println(statement.getStatement());
@@ -98,6 +110,13 @@ public class DMLRepo {
         return isSuccessful;
     }
 
+    /**
+     * Updates a record in the database with new values where the old values existed
+     * @param model the MetaModel corresponding to the updateObj and oldObj
+     * @param updateObj the Object that holds the new values to be updated into the record
+     * @param oldObj the Object that holds the current values to find in the record
+     * @return a boolean that is true if a record was updated or false if it was not
+     */
     public boolean update (MetaModel<?> model, Object updateObj, Object oldObj) {
 
         UpdateStatement statement = new UpdateStatement(model, oldObj);
@@ -157,6 +176,11 @@ public class DMLRepo {
         return isSuccessful;
     }
 
+    /**
+     * Grabs all of the records (Objects) that corresponds to the MetaModel and returns a List of them
+     * @param model the MetaModel to pull all of the corresponding records for
+     * @return a List of the Objects from the database that correspond to the given MetaModel
+     */
     public List<?> selectAll(MetaModel<?> model) {
 
         List<Object> objList = new ArrayList<>();
