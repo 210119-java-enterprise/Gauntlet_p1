@@ -1,6 +1,7 @@
 package com.revature.services;
 
 import com.revature.repos.DMLRepo;
+import com.revature.util.ColumnField;
 import com.revature.util.MetaModel;
 
 import java.util.List;
@@ -77,6 +78,10 @@ public class DMLService {
      */
     public List<?> getAll(MetaModel<?> model) {
         return dmlRepo.selectAll(model);
+    }
+
+    public List<?> getWhere (MetaModel<?> model, List<ColumnField> columns) {
+        return dmlRepo.selectWhere(model, columns);
     }
 
 }

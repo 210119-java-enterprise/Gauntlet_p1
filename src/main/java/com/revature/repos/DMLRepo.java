@@ -20,6 +20,7 @@ import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The Repository class for handling any JDBC Data Manipulation Language Queries
@@ -217,6 +218,64 @@ public class DMLRepo {
 
 
                 for (String s : columnNames) {
+                    for (ColumnField column : modelColumns) {
+                        if (column.getColumnName().equals(s)) {
+                            Object value = rs.getObject(s);
+                            String colName = column.getName();
+                            String nameForMethod = colName.substring(0,1).toUpperCase() + colName.substring(1);
+                            Method method = model.getModeledClass().getMethod("set" + nameForMethod, column.getType());
+                            method.invoke(obj, value);
+                        }
+                    }
+                }
+
+                objList.add(obj);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return objList;
+    }
+
+    // TODO
+    public List<?> selectWhere (MetaModel<?> model, List<ColumnField> columns) {
+        List<Object> objList = new ArrayList<>();
+        List<String> columnNames = columns.stream()
+                                        .map(ColumnField::getName)
+                                        .collect(Collectors.toList());
+
+        SelectStatement statement = new SelectStatement(model, columnNames);
+        Constructor<?> noArgConstructor = null;
+        Constructor<?>[] constructors = model.getModeledClass().getConstructors();
+
+        System.out.println(model.getModeledClass().getName());
+        System.out.println(constructors.length);
+
+        noArgConstructor = Arrays.stream(constructors)
+                .filter(c -> c.getParameterTypes().length == 0)
+                .findFirst()
+                .get();
+
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+
+            PreparedStatement pstmt = conn.prepareStatement(statement.getStatement());
+            ResultSet rs = pstmt.executeQuery();
+
+            List<String> objColumnNames = new ArrayList<>();
+            List<ColumnField> modelColumns = model.getColumns();
+            ResultSetMetaData metaData = rs.getMetaData();
+
+            for (int i = 0; i < metaData.getColumnCount(); i++) {
+                columnNames.add(metaData.getColumnName(i+1));
+            }
+
+            while (rs.next()) {
+                Object obj = noArgConstructor.newInstance();
+
+
+                for (String s : objColumnNames) {
                     for (ColumnField column : modelColumns) {
                         if (column.getColumnName().equals(s)) {
                             Object value = rs.getObject(s);

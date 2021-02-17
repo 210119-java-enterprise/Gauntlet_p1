@@ -3,6 +3,7 @@ package com.revature.util;
 import com.revature.services.DMLService;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Session {
@@ -77,5 +78,28 @@ public class Session {
         }
 
         return dmlService.getAll(correctModel);
+    }
+
+    public List<?> getWhere(Class<?> clazz, List<String> colNames) {
+
+        MetaModel<?> correctModel = null;
+
+        for (MetaModel<?> model : modelList) {
+            if (clazz.getName().equals(model.getClassName()))
+                correctModel = model;
+        }
+
+        List<ColumnField> allColumns = correctModel.getColumns();
+        List<ColumnField> whereColumns = new ArrayList<>();
+
+        for (String s : colNames) {
+            for (ColumnField column : allColumns) {
+                if (s.equals(column.getName()))
+                    whereColumns.add(column);
+            }
+        }
+
+        return dmlService.getWhere(correctModel, whereColumns);
+
     }
 }
