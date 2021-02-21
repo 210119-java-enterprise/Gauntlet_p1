@@ -35,12 +35,12 @@ public class DMLRepo {
      * @param obj the Object that contains the values that should be inserted into the database
      * @return a boolean that is true if the insert happened and false if it didn't
      */
-    public boolean insert(MetaModel<?> model, Object obj) {
+    public int insert(MetaModel<?> model, Object obj) {
 
         InsertStatement statement = new InsertStatement(model, obj);
-        ArrayList<String> objVal = new ArrayList<>();
+        ArrayList<Object> objVal = new ArrayList<>();
         Field[] fields = obj.getClass().getDeclaredFields();
-        boolean isSuccessful = false;
+        int newId = -1;
 
         for (Field field : fields) {
             field.setAccessible(true);
@@ -48,7 +48,7 @@ public class DMLRepo {
             Id id = field.getAnnotation(Id.class);
             if ((id == null) && (column != null)) {
                 try {
-                    objVal.add(field.get(obj).toString());
+                    objVal.add(field.get(obj));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -64,15 +64,24 @@ public class DMLRepo {
                 pstmt.setObject(i + 1, objVal.get(i));
             }
 
-            if(pstmt.executeUpdate() > 0)
-                isSuccessful = true;
+            int rowsInserted = pstmt.executeUpdate();
 
+            if (rowsInserted != 0) {
+                ResultSet rs = pstmt.getGeneratedKeys();
+                if (rs.next()) {
+                    newId = rs.getInt(1);
+                }
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return isSuccessful;
+        if (newId < 0) {
+            // throw exception...
+        }
+
+        return newId;
     }
 
     /**

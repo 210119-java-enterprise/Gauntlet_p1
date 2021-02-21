@@ -18,7 +18,7 @@ public class Session {
         this.conn = conn;
     }
 
-    public boolean save (Object newObj) {
+    public int save (Object newObj) {
 
         MetaModel<?> correctModel = null;
 

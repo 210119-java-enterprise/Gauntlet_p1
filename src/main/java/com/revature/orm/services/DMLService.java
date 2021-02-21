@@ -32,7 +32,7 @@ public class DMLService {
      * @param newObj the Object to be inserted into the database
      * @return true if the Object was inserted, false if it was not
      */
-    public boolean insert(MetaModel<?> model, Object newObj) {
+    public int insert(MetaModel<?> model, Object newObj) {
 
         if (newObj == null) {
             // throw error...
