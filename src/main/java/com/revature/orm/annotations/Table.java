@@ -1,4 +1,4 @@
-package com.revature.annotations;
+package com.revature.orm.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,5 +7,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Entity {
+public @interface Table {
+    String name();
 }

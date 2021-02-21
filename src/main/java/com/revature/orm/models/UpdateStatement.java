@@ -1,9 +1,9 @@
-package com.revature.models;
+package com.revature.orm.models;
 
-import com.revature.annotations.Column;
-import com.revature.annotations.Id;
-import com.revature.annotations.Table;
-import com.revature.util.MetaModel;
+import com.revature.orm.annotations.Column;
+import com.revature.orm.annotations.Id;
+import com.revature.orm.annotations.Table;
+import com.revature.orm.util.MetaModel;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

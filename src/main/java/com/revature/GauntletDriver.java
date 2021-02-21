@@ -1,12 +1,10 @@
 package com.revature;
 
 import com.revature.testclass.User;
-import com.revature.util.ColumnField;
-import com.revature.util.Configuration;
-import com.revature.util.Session;
-import com.revature.util.SessionFactory;
+import com.revature.orm.util.Configuration;
+import com.revature.orm.util.Session;
+import com.revature.orm.util.SessionFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GauntletDriver {

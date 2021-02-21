@@ -1,6 +1,6 @@
-package com.revature.util;
+package com.revature.orm.util;
 
-import com.revature.annotations.Column;
+import com.revature.orm.annotations.Column;
 
 import java.lang.reflect.Field;
 

@@ -1,7 +1,7 @@
-package com.revature.models;
+package com.revature.orm.models;
 
-import com.revature.annotations.Table;
-import com.revature.util.MetaModel;
+import com.revature.orm.annotations.Table;
+import com.revature.orm.util.MetaModel;
 
 import java.util.List;
 

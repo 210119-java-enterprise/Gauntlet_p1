@@ -1,7 +1,7 @@
-package com.revature.util;
+package com.revature.orm.util;
 
-import com.revature.repos.DMLRepo;
-import com.revature.services.DMLService;
+import com.revature.orm.repos.DMLRepo;
+import com.revature.orm.services.DMLService;
 
 import java.util.List;
 

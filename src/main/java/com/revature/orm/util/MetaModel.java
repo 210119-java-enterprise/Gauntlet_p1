@@ -1,8 +1,8 @@
-package com.revature.util;
+package com.revature.orm.util;
 
-import com.revature.annotations.Column;
-import com.revature.annotations.Entity;
-import com.revature.annotations.Id;
+import com.revature.orm.annotations.Column;
+import com.revature.orm.annotations.Entity;
+import com.revature.orm.annotations.Id;
 
 import java.lang.reflect.Field;
 import java.util.LinkedList;

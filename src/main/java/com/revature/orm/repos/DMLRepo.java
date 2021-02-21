@@ -1,14 +1,14 @@
-package com.revature.repos;
+package com.revature.orm.repos;
 
-import com.revature.annotations.Column;
-import com.revature.annotations.Id;
-import com.revature.models.DeleteStatement;
-import com.revature.models.InsertStatement;
-import com.revature.models.SelectStatement;
-import com.revature.models.UpdateStatement;
-import com.revature.util.ColumnField;
-import com.revature.util.ConnectionFactory;
-import com.revature.util.MetaModel;
+import com.revature.orm.annotations.Column;
+import com.revature.orm.annotations.Id;
+import com.revature.orm.models.DeleteStatement;
+import com.revature.orm.models.InsertStatement;
+import com.revature.orm.models.SelectStatement;
+import com.revature.orm.models.UpdateStatement;
+import com.revature.orm.util.ColumnField;
+import com.revature.orm.util.ConnectionFactory;
+import com.revature.orm.util.MetaModel;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;

@@ -1,8 +1,8 @@
-package com.revature.services;
+package com.revature.orm.services;
 
-import com.revature.repos.DMLRepo;
-import com.revature.util.ColumnField;
-import com.revature.util.MetaModel;
+import com.revature.orm.repos.DMLRepo;
+import com.revature.orm.util.ColumnField;
+import com.revature.orm.util.MetaModel;
 
 import java.util.List;
 

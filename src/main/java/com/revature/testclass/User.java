@@ -1,9 +1,9 @@
 package com.revature.testclass;
 
-import com.revature.annotations.Column;
-import com.revature.annotations.Entity;
-import com.revature.annotations.Id;
-import com.revature.annotations.Table;
+import com.revature.orm.annotations.Column;
+import com.revature.orm.annotations.Entity;
+import com.revature.orm.annotations.Id;
+import com.revature.orm.annotations.Table;
 
 import java.util.Objects;
 

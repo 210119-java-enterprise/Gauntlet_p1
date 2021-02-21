@@ -1,6 +1,6 @@
-package com.revature.util;
+package com.revature.orm.util;
 
-import com.revature.annotations.Id;
+import com.revature.orm.annotations.Id;
 
 import java.lang.reflect.Field;
 
