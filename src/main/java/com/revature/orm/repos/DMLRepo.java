@@ -13,10 +13,7 @@ import com.revature.orm.util.MetaModel;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -59,12 +56,13 @@ public class DMLRepo {
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
-            PreparedStatement pstmt = conn.prepareStatement(statement.getStatement());
+            PreparedStatement pstmt = conn.prepareStatement(statement.getStatement(), Statement.RETURN_GENERATED_KEYS);
             for (int i = 0; i < objVal.size(); i++) {
                 pstmt.setObject(i + 1, objVal.get(i));
             }
 
             int rowsInserted = pstmt.executeUpdate();
+            System.out.println("Rows: " + rowsInserted);
 
             if (rowsInserted != 0) {
                 ResultSet rs = pstmt.getGeneratedKeys();
