@@ -40,7 +40,8 @@ Example: int newClassId = session.save(myAnnotatedObject);
 
 ## Improvements to Include
 
-1. Connection Pooling
-2. Log4J
-3. JUnit / Mockito
+1. More specific Select statements (where clauses / joins)
+2. Connection Pooling
+3. Log4J
+4. JUnit / Mockito
 
