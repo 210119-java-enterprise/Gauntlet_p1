@@ -1,5 +1,5 @@
 # Gauntlet ORM
-Gauntlet ORM is a very simplistic ORM designed by myself (Alex Googe). I was inspired by Hibernate's syntax and attempted to create my own version, albiet with much less functionality, of an ORM. This ORM can implement simple CRUD methods (Inserting, Select all, Updating, and Deleting).
+Gauntlet ORM is a very simplistic ORM designed by myself (Alex Googe). I was inspired by Hibernate's syntax and attempted to create my own version, albiet with much less functionality, of an ORM. This ORM can implement simple CRUD methods (Inserting, Select all, Updating, and Deleting) on PostgreSQL databases.
 
 ## Usage
 To use Gauntlet, you must go through a few steps:
