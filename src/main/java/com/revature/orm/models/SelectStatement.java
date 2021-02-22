@@ -25,36 +25,18 @@ public class SelectStatement {
 
         statement = "";
 
+        // Get the table name. . .
         String table = model.getModeledClass().getAnnotation(Table.class).name();
 
+        // Build the simple select statement. . .
         statement = "SELECT * FROM " + table;
 
     }
 
-    // Select + WHERE
-    public SelectStatement (MetaModel<?> model, List<String> columnNames) {
-
-        statement = "";
-
-        StringBuilder where = new StringBuilder();
-        where.append(" WHERE ");
-
-        String table = model.getModeledClass().getAnnotation(Table.class).name();
-
-        statement = "SELECT * FROM" + table;
-
-        for (int i = 0; i < columnNames.size(); i++) {
-
-            if (i == columnNames.size() - 1) {
-                where.append(columnNames.get(i) + " = ?");
-            } else {
-                where.append(columnNames.get(i) + " = ?, ");
-            }
-        }
-
-        statement += " " + where.toString();
-    }
-
+    /**
+     * Returns the String representation of the JDBC select statement
+     * @return the private statement variable
+     */
     public String getStatement() {
         return statement;
     }

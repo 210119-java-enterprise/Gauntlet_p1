@@ -1,7 +1,7 @@
 package com.revature.orm.util;
 
 import com.revature.orm.repos.DMLRepo;
-import com.revature.orm.services.DMLService;
+import com.revature.orm.services.SQLService;
 
 import java.util.List;
 
@@ -9,14 +9,14 @@ public class SessionFactory {
 
     private List<MetaModel<Class<?>>> modelList;
 
-    private DMLService dmlService;
+    private SQLService SQLService;
 
     public SessionFactory(List<MetaModel<Class<?>>> modelList) {
         this.modelList = modelList;
 
         final DMLRepo dmlRepo = new DMLRepo();
 
-        dmlService = new DMLService(dmlRepo);
+        SQLService = new SQLService(dmlRepo);
     }
 
     @SuppressWarnings({"unchecked"})
@@ -27,7 +27,7 @@ public class SessionFactory {
 
     // TODO: Connection Pooling instead of grabbing from ConnectionFactory.
     public Session openSession () {
-        Session session = new Session(modelList, dmlService, ConnectionFactory.getInstance().getConnection());
+        Session session = new Session(modelList, SQLService, ConnectionFactory.getInstance().getConnection());
         return session;
 
     }

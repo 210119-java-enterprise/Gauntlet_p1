@@ -35,40 +35,56 @@ public class InsertStatement {
      * @param newObj the Object that holds the values to be inserted into the database
      */
     private void scrape(MetaModel<?> model, Object newObj) {
+
+        // Get the table name. . .
         String table = newObj.getClass().getAnnotation(Table.class).name();
+
+        // Get a list of Strings that represent the column names (without the Id column). . .
         List<String> columns = model.getColumnsMinusId()
                                     .stream()
                                     .map(ColumnField::getColumnName)
                                     .collect(Collectors.toList());
 
+        // Build the insert statement using the table name and the column names. . .
         buildStatement(table, columns);
     }
 
     /**
-     * Private helper method that builds the statement
+     * Private helper method that builds the statement using String concatenation
      * @param table a String for the table name to include into the insert statement
      * @param columns a List of columns to include in the insert statement
      */
     private void buildStatement (String table, List<String> columns) {
 
+        // Base Strings. . .
         statement = "INSERT INTO " + table + " (";
         String valuesStr = " VALUES (";
 
         for (int i = 0; i < columns.size(); i++) {
+
+            // If the last column. . .
             if (i == columns.size() - 1) {
 
+                // Add the column name to the statement and a value representation (?) to the values. . .
+                // End the Strings with ) since this is the last column. . .
                 statement += columns.get(i) + ") ";
                 valuesStr += " ? ) ";
             } else {
 
+                // Add the column name to the statement, and a value representation (?) to the values. . .
                 statement += columns.get(i) + ", ";
                 valuesStr += " ? , ";
             }
         }
 
+        // Add the values section of the JDBC String to the rest of the statement. . .
         statement += valuesStr;
     }
 
+    /**
+     * Returns the String representation of the JDBC insert statement
+     * @return the private statement variable
+     */
     public String getStatement() {
         return statement;
     }

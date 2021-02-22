@@ -32,17 +32,23 @@ public class DeleteStatement {
      * @param deleteObj the Object to be deleted
      */
     public void scrape (Object deleteObj) {
+
+        // Get the String name of the table. . .
         String table = deleteObj.getClass().getAnnotation(Table.class).name();
+
+        // Get all the fields of the class. . .
         Field[] fields = deleteObj.getClass().getDeclaredFields();
 
         String idColName = "";
 
+        // Get the String name of the Id column for the class. . .
         for (Field field : fields) {
             if (field.getAnnotation(Id.class) != null) {
                 idColName = field.getAnnotation(Column.class).name();
             }
         }
 
+        // Build the delete statement from the table and the Id column. . .
         buildStatement(table, idColName);
 
     }
@@ -57,6 +63,10 @@ public class DeleteStatement {
                     " WHERE " + idColName + " = ?";
     }
 
+    /**
+     * Returns the String representation of the JDBC delete statement
+     * @return the private statement variable
+     */
     public String getStatement() {
         return statement;
     }

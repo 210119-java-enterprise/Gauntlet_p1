@@ -1,17 +1,18 @@
 package com.revature.orm.services;
 
 import com.revature.orm.repos.DMLRepo;
+import com.revature.orm.repos.DQLRepo;
 import com.revature.orm.util.ColumnField;
 import com.revature.orm.util.MetaModel;
 
 import java.util.List;
 
 /**
- * Service class for handling any JDBC Data Manipulation Language Queries
+ * Service class for handling any basic SQL Queries
  *
  * @author Alex Googe (github: darkspearrai)
  */
-public class DMLService {
+public class SQLService {
 
     /**
      * DMLRepo that will handle the creation and execution of JDBC DML queries
@@ -19,10 +20,15 @@ public class DMLService {
     private DMLRepo dmlRepo;
 
     /**
+     * DQLRepo that will handle the creation and execution of JDBC DQL queries
+     */
+    private DQLRepo dqlRepo;
+
+    /**
      * Constructor for DMLService
      * @param dmlRepo the DMLRepo that will be handling creation and execution of JDBC DML queries
      */
-    public DMLService (DMLRepo dmlRepo) {
+    public SQLService(DMLRepo dmlRepo) {
         this.dmlRepo = dmlRepo;
     }
 
@@ -77,11 +83,6 @@ public class DMLService {
      * @return a List of all the Objects that the MetaModel corresponds to
      */
     public List<?> getAll(MetaModel<?> model) {
-        return dmlRepo.selectAll(model);
+        return dqlRepo.selectAll(model);
     }
-
-    public List<?> getWhere (MetaModel<?> model, List<ColumnField> columns) {
-        return dmlRepo.selectWhere(model, columns);
-    }
-
 }

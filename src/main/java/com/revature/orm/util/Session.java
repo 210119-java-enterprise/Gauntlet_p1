@@ -1,20 +1,19 @@
 package com.revature.orm.util;
 
-import com.revature.orm.services.DMLService;
+import com.revature.orm.services.SQLService;
 
 import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Session {
 
     private List<MetaModel<Class<?>>> modelList;
-    private DMLService dmlService;
+    private SQLService SQLService;
     private Connection conn;
 
-    public Session (List<MetaModel<Class<?>>> modelList, DMLService dmlService, Connection conn) {
+    public Session (List<MetaModel<Class<?>>> modelList, SQLService SQLService, Connection conn) {
         this.modelList = modelList;
-        this.dmlService = dmlService;
+        this.SQLService = SQLService;
         this.conn = conn;
     }
 
@@ -32,7 +31,7 @@ public class Session {
             // throw exception...
         }
 
-        return dmlService.insert(correctModel, newObj);
+        return SQLService.insert(correctModel, newObj);
 
 
     }
@@ -45,7 +44,7 @@ public class Session {
 
 
     public boolean delete (Object deleteObj) {
-        return dmlService.delete(deleteObj);
+        return SQLService.delete(deleteObj);
 
     }
 
@@ -65,7 +64,7 @@ public class Session {
         if (correctModel == null) {
             // throw exception...
         }
-        return dmlService.update(correctModel, updateObj, oldObj);
+        return SQLService.update(correctModel, updateObj, oldObj);
     }
 
     public List<?> getAll(Class<?> clazz) {
@@ -77,29 +76,6 @@ public class Session {
                 correctModel = model;
         }
 
-        return dmlService.getAll(correctModel);
-    }
-
-    public List<?> getWhere(Class<?> clazz, List<String> colNames) {
-
-        MetaModel<?> correctModel = null;
-
-        for (MetaModel<?> model : modelList) {
-            if (clazz.getName().equals(model.getClassName()))
-                correctModel = model;
-        }
-
-        List<ColumnField> allColumns = correctModel.getColumns();
-        List<ColumnField> whereColumns = new ArrayList<>();
-
-        for (String s : colNames) {
-            for (ColumnField column : allColumns) {
-                if (s.equals(column.getName()))
-                    whereColumns.add(column);
-            }
-        }
-
-        return dmlService.getWhere(correctModel, whereColumns);
-
+        return SQLService.getAll(correctModel);
     }
 }

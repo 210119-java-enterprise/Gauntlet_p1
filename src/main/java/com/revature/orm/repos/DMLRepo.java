@@ -4,20 +4,14 @@ import com.revature.orm.annotations.Column;
 import com.revature.orm.annotations.Id;
 import com.revature.orm.models.DeleteStatement;
 import com.revature.orm.models.InsertStatement;
-import com.revature.orm.models.SelectStatement;
 import com.revature.orm.models.UpdateStatement;
-import com.revature.orm.util.ColumnField;
 import com.revature.orm.util.ConnectionFactory;
 import com.revature.orm.util.MetaModel;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * The Repository class for handling any JDBC Data Manipulation Language Queries
@@ -30,21 +24,39 @@ public class DMLRepo {
      * Inserts the Object into the database
      * @param model the MetaModel that corresponds to the Object that is being inserted into the database
      * @param obj the Object that contains the values that should be inserted into the database
-     * @return a boolean that is true if the insert happened and false if it didn't
+     * @return an int that corresponds to the new Id value of the record, or a -1 if nothing was inserted.
      */
     public int insert(MetaModel<?> model, Object obj) {
 
+        // Create the InsertStatement Object that will build the String representation of the INSERT statement. . .
         InsertStatement statement = new InsertStatement(model, obj);
+
+        // An ArrayList for the values of the Object to be inserted. . .
         ArrayList<Object> objVal = new ArrayList<>();
+
+        // Get the fields of the Object passed in. . .
         Field[] fields = obj.getClass().getDeclaredFields();
+
+        // Id value for the new record of the database. . .
         int newId = -1;
 
+        // For each field of the Object. . .
         for (Field field : fields) {
+
+            // Make sure we can access private fields. . .
             field.setAccessible(true);
+
+            // See if the field is annotated with column and Id. . .
             Column column = field.getAnnotation(Column.class);
             Id id = field.getAnnotation(Id.class);
+
+            // If it is a column, but not the Id. . .
             if ((id == null) && (column != null)) {
+
+
                 try {
+
+                    // Add the value of that column to the Object values ArrayList. . .
                     objVal.add(field.get(obj));
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -52,18 +64,21 @@ public class DMLRepo {
             }
         }
 
-        System.out.println(statement.getStatement());
-
+        // Get connection. . . Should be replaced with SessionFactory Connection once Connection Pooling is implemented. . .
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
+            // Prepare the statement to the connection while generating keys to get the new Id. . .
             PreparedStatement pstmt = conn.prepareStatement(statement.getStatement(), Statement.RETURN_GENERATED_KEYS);
+
+            // Add the Object values to the query. . .
             for (int i = 0; i < objVal.size(); i++) {
                 pstmt.setObject(i + 1, objVal.get(i));
             }
 
+            // Should only be 1. . .
             int rowsInserted = pstmt.executeUpdate();
-            System.out.println("Rows: " + rowsInserted);
 
+            // If there was a row inserted, get the generated keys and set the newId from the ResultSet. . .
             if (rowsInserted != 0) {
                 ResultSet rs = pstmt.getGeneratedKeys();
                 if (rs.next()) {
@@ -79,6 +94,7 @@ public class DMLRepo {
             // throw exception...
         }
 
+        // Return the Id of the new record. . .
         return newId;
     }
 
@@ -88,15 +104,29 @@ public class DMLRepo {
      * @return a boolean that is true if the Object was deleted or false if it is not
      */
     public boolean delete (Object deleteObj) {
+
+        // Create the DeleteStatement object that will build the JDBC DELETE statement String.
         DeleteStatement statement = new DeleteStatement(deleteObj);
-        System.out.println(statement.getStatement());
+
+        // Id of the object to delete. . .
         int idVal = 0;
+
+        // Fields of the deleteObj's class. . .
         Field[] fields = deleteObj.getClass().getDeclaredFields();
+
+        // Did we delete. . .
         boolean isSuccessful = false;
 
+        // For each field. . .
         for (Field field : fields) {
+
+            // Make sure we can use private fields. . .
             field.setAccessible(true);
+
+            // If the field has the Id annotation. . .
             if (field.getAnnotation(Id.class) != null) {
+
+                // Set idVal equal to the Id of the deleteObj. . .
                 try {
                     idVal = field.getInt(deleteObj);
                 } catch (IllegalAccessException e) {
@@ -105,11 +135,14 @@ public class DMLRepo {
             }
         }
 
+        // Get the connection. . . Should be SessionFactory Connection when implemented. . .
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
+            // Prepare the DELETE statement. . .
             PreparedStatement pstmt = conn.prepareStatement(statement.getStatement());
             pstmt.setInt(1, idVal);
 
+            // If a record was deleted, isSuccessfull is true. . .
             if (pstmt.executeUpdate() > 0)
                 isSuccessful = true;
 
@@ -117,6 +150,7 @@ public class DMLRepo {
             e.printStackTrace();
         }
 
+        // Return if there was a deletion. . .
         return isSuccessful;
     }
 
@@ -129,53 +163,37 @@ public class DMLRepo {
      */
     public boolean update (MetaModel<?> model, Object updateObj, Object oldObj) {
 
+        // Create the UpdateStatement object that will build the String for the JDBC UPDATE query. . .
         UpdateStatement statement = new UpdateStatement(model, oldObj);
-        System.out.println(statement.getStatement());
+
+        // Did we update a record. . .
         boolean isSuccessful = false;
 
-        List<String> oldVal = new ArrayList<>();
-        List<String> newVal = new ArrayList<>();
+        // Create a List<Object> of values from both the old Object and the updated Object. . .
+        List<Object> oldVal = getFieldValues(oldObj);
+        List<Object> newVal = getFieldValues(updateObj);
 
-        Field[] oldFields = oldObj.getClass().getDeclaredFields();
-        Field[] newFields = updateObj.getClass().getDeclaredFields();
-
-        for (Field field : oldFields) {
-            field.setAccessible(true);
-            Column column = field.getAnnotation(Column.class);
-            Id id = field.getAnnotation(Id.class);
-            if ((id == null) && (column != null)) {
-                try {
-                    oldVal.add(field.get(oldObj).toString());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        for (Field field : newFields) {
-            field.setAccessible(true);
-            Column column = field.getAnnotation(Column.class);
-            Id id = field.getAnnotation(Id.class);
-            if ((id == null) && (column != null)) {
-                try {
-                    newVal.add(field.get(updateObj).toString());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
+        // Columns in each object. . .
         int numCol = oldVal.size();
 
+        // Get the connection. . . Should be a SessionFactory Connection when pooling is implemented. . .
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
+            // Prepare the UPDATE statement. . .
             PreparedStatement pstmt = conn.prepareStatement(statement.getStatement());
 
+            // For every column in each object. . .
             for (int i = 0; i < numCol; i++) {
+
+                // Set the new values for the record. . .
                 pstmt.setObject(i+1, newVal.get(i));
+
+                // Where the old values equal. . .
+                // This is parameter i+numCol+1 since we know that the objects should have the same number of fields / columns. . .
                 pstmt.setObject(i+numCol+1, oldVal.get(i));
             }
 
+            // If there was an updated record. . .
             if (pstmt.executeUpdate() > 0)
                 isSuccessful = true;
 
@@ -183,124 +201,43 @@ public class DMLRepo {
             e.printStackTrace();
         }
 
+        // Return if there was an updated record. . .
         return isSuccessful;
     }
 
     /**
-     * Grabs all of the records (Objects) that corresponds to the MetaModel and returns a List of them
-     * @param model the MetaModel to pull all of the corresponding records for
-     * @return a List of the Objects from the database that correspond to the given MetaModel
+     * Helper method to get all of the values in an Object List based of off the object passed in
+     * @param obj the object to retrieve the values from
+     * @return a List of the values of the fields in the object
      */
-    public List<?> selectAll (MetaModel<?> model) {
+    private List<Object> getFieldValues (Object obj) {
 
-        List<Object> objList = new ArrayList<>();
-        SelectStatement statement = new SelectStatement(model);
-        Constructor<?> noArgConstructor = null;
-        Constructor<?>[] constructors = model.getModeledClass().getConstructors();
+        // List of the values of the fields for the object. . .
+        List<Object> values = new ArrayList<>();
 
-        System.out.println(model.getModeledClass().getName());
-        System.out.println(constructors.length);
+        // Get the fields of the object. . .
+        Field[] objFields = obj.getClass().getDeclaredFields();
 
-        noArgConstructor = Arrays.stream(constructors)
-                                 .filter(c -> c.getParameterTypes().length == 0)
-                                 .findFirst()
-                                 .get();
+        // For each field. . .
+        for (Field field : objFields) {
 
+            // Make sure we can use private fields. . .
+            field.setAccessible(true);
 
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+            // Check if it is a column and not an Id. . .
+            Column column = field.getAnnotation(Column.class);
+            Id id = field.getAnnotation(Id.class);
+            if ((id == null) && (column != null)) {
 
-            PreparedStatement pstmt = conn.prepareStatement(statement.getStatement());
-            ResultSet rs = pstmt.executeQuery();
-
-            List<String> columnNames = new ArrayList<>();
-            List<ColumnField> modelColumns = model.getColumns();
-            ResultSetMetaData metaData = rs.getMetaData();
-
-            for (int i = 0; i < metaData.getColumnCount(); i++) {
-                columnNames.add(metaData.getColumnName(i+1));
-            }
-
-            while (rs.next()) {
-                Object obj = noArgConstructor.newInstance();
-
-
-                for (String s : columnNames) {
-                    for (ColumnField column : modelColumns) {
-                        if (column.getColumnName().equals(s)) {
-                            Object value = rs.getObject(s);
-                            String colName = column.getName();
-                            String nameForMethod = colName.substring(0,1).toUpperCase() + colName.substring(1);
-                            Method method = model.getModeledClass().getMethod("set" + nameForMethod, column.getType());
-                            method.invoke(obj, value);
-                        }
-                    }
+                // Add the values to the values List. . .
+                try {
+                    values.add(field.get(obj));
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-
-                objList.add(obj);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
-        return objList;
+        return values;
     }
-
-    // TODO
-    public List<?> selectWhere (MetaModel<?> model, List<ColumnField> columns) {
-        List<Object> objList = new ArrayList<>();
-        List<String> columnNames = columns.stream()
-                                        .map(ColumnField::getName)
-                                        .collect(Collectors.toList());
-
-        SelectStatement statement = new SelectStatement(model, columnNames);
-        Constructor<?> noArgConstructor = null;
-        Constructor<?>[] constructors = model.getModeledClass().getConstructors();
-
-        System.out.println(model.getModeledClass().getName());
-        System.out.println(constructors.length);
-
-        noArgConstructor = Arrays.stream(constructors)
-                .filter(c -> c.getParameterTypes().length == 0)
-                .findFirst()
-                .get();
-
-
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
-
-            PreparedStatement pstmt = conn.prepareStatement(statement.getStatement());
-            ResultSet rs = pstmt.executeQuery();
-
-            List<String> objColumnNames = new ArrayList<>();
-            List<ColumnField> modelColumns = model.getColumns();
-            ResultSetMetaData metaData = rs.getMetaData();
-
-            for (int i = 0; i < metaData.getColumnCount(); i++) {
-                columnNames.add(metaData.getColumnName(i+1));
-            }
-
-            while (rs.next()) {
-                Object obj = noArgConstructor.newInstance();
-
-
-                for (String s : objColumnNames) {
-                    for (ColumnField column : modelColumns) {
-                        if (column.getColumnName().equals(s)) {
-                            Object value = rs.getObject(s);
-                            String colName = column.getName();
-                            String nameForMethod = colName.substring(0,1).toUpperCase() + colName.substring(1);
-                            Method method = model.getModeledClass().getMethod("set" + nameForMethod, column.getType());
-                            method.invoke(obj, value);
-                        }
-                    }
-                }
-
-                objList.add(obj);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return objList;
-    }
-
 }
