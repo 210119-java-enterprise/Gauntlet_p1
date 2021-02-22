@@ -11,9 +11,9 @@ public class Configuration {
     private String dbUser;
     private String dbPass;
 
-    public Configuration() {
+    public Configuration(String path) {
         try {
-            props.load(new FileReader("src/main/resources/app.properties"));
+            props.load(new FileReader(path));
         } catch (Exception e) {
             e.printStackTrace();
         }

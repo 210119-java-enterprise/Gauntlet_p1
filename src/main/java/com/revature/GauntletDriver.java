@@ -10,11 +10,11 @@ import java.util.List;
 public class GauntletDriver {
 
     public static void main(String[] args) {
-        User user = new User("alex_googe5750000001","password", "Alex","Googe");
+        User user = new User("alex_googe5750000006","password", "Alex","Googe");
         //User user1 = new User("alex_googe_updated", "password_updated", "Alex", "Googe");
 
         //User user1 = new User(1);
-        SessionFactory factory = new Configuration()
+        SessionFactory factory = new Configuration("src/main/resources/app.properties")
                                 .addAnnotatedClass(User.class)
                                 .buildSessionFactory();
 
