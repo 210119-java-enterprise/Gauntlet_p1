@@ -24,12 +24,15 @@ public class SQLService {
      */
     private DQLRepo dqlRepo;
 
+
     /**
-     * Constructor for DMLService
-     * @param dmlRepo the DMLRepo that will be handling creation and execution of JDBC DML queries
+     * SQLService constructor that takes in the Repos needed
+     * @param dmlRepo the Repo that handles DML queries
+     * @param dqlRepo the Repo that handles DQL queries
      */
-    public SQLService(DMLRepo dmlRepo) {
+    public SQLService(DMLRepo dmlRepo, DQLRepo dqlRepo) {
         this.dmlRepo = dmlRepo;
+        this.dqlRepo = dqlRepo;
     }
 
     /**
