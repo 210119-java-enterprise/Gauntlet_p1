@@ -44,7 +44,7 @@ public class SQLService {
     public int insert(MetaModel<?> model, Object newObj) {
 
         if (newObj == null) {
-            // throw error...
+            throw new IllegalStateException("Object cannot be null!");
         }
         return dmlRepo.insert(model, newObj);
 
@@ -58,7 +58,7 @@ public class SQLService {
     public boolean delete(Object deleteObj) {
 
         if (deleteObj == null) {
-            // throw error...
+            throw new IllegalStateException("Object cannot be null!");
         }
 
         return dmlRepo.delete(deleteObj);
@@ -73,8 +73,8 @@ public class SQLService {
      */
     public boolean update(MetaModel<?> model, Object updateObj, Object oldObj) {
 
-        if (updateObj == null && oldObj == null) {
-            // throw exception
+        if (updateObj == null || oldObj == null) {
+            throw new IllegalStateException("The Objects cannot be null!");
         }
 
         return dmlRepo.update(model, updateObj, oldObj);

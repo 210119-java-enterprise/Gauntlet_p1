@@ -58,6 +58,9 @@ public class DMLRepo {
 
                     // Add the value of that column to the Object values ArrayList. . .
                     objVal.add(field.get(obj));
+                } catch (IllegalAccessException e) {
+                    System.out.println("The variable was not able to be accessed. Was field.getAccessible set to true?");
+                    e.printStackTrace();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -86,12 +89,16 @@ public class DMLRepo {
                 }
             }
 
+        } catch (SQLException e) {
+            System.out.println("SQL Exception occurred. Check the SQL Strings or data");
+            e.printStackTrace();
         } catch (Exception e) {
+            System.out.println("An exception occurred that was not SQL.");
             e.printStackTrace();
         }
 
         if (newId < 0) {
-            // throw exception...
+            throw new RuntimeException("New Generated Id was not received.");
         }
 
         // Return the Id of the new record. . .
@@ -130,6 +137,9 @@ public class DMLRepo {
                 try {
                     idVal = field.getInt(deleteObj);
                 } catch (IllegalAccessException e) {
+                    System.out.println("A field was unable to be accessed. Was field.getAccessible set to true?");
+                    e.printStackTrace();
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -146,6 +156,9 @@ public class DMLRepo {
             if (pstmt.executeUpdate() > 0)
                 isSuccessful = true;
 
+        } catch (SQLException e) {
+            System.out.println("An SQL Exception occurred.");
+            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -197,6 +210,9 @@ public class DMLRepo {
             if (pstmt.executeUpdate() > 0)
                 isSuccessful = true;
 
+        } catch (SQLException e) {
+            System.out.println("SQL Exception occurred.");
+            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -232,6 +248,9 @@ public class DMLRepo {
                 // Add the values to the values List. . .
                 try {
                     values.add(field.get(obj));
+                } catch (IllegalAccessException e) {
+                    System.out.println("A field was unable to be accessed. Was field.getAccessible set to true?");
+                    e.printStackTrace();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

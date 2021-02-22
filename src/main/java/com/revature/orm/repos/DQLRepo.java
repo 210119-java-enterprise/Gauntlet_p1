@@ -7,10 +7,7 @@ import com.revature.orm.util.MetaModel;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,6 +36,10 @@ public class DQLRepo {
                 .filter(c -> c.getParameterTypes().length == 0)
                 .findFirst()
                 .get();
+
+        if (noArgConstructor == null) {
+            throw new IllegalStateException("The class, " + model.getClassName() + ", does not have a No Args Constructor!");
+        }
 
 
         // Get the connection. . . Should be a SessionFactory connection once pooling is implemented. . .
@@ -101,7 +102,11 @@ public class DQLRepo {
                 // Add the object to the list. . .
                 objList.add(obj);
             }
+        } catch (SQLException e) {
+            System.out.println("An SQL Exception occurred!");
+            e.printStackTrace();
         } catch (Exception e) {
+            System.out.println("An " + e.getClass().getName() + " exception occurred!");
             e.printStackTrace();
         }
 
